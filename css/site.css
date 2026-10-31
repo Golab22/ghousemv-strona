@@ -321,3 +321,9 @@ html.gh-lock{overflow:hidden}
 #viewer .prev{left:14px;top:50%;transform:translateY(-50%)}
 #viewer .next{right:14px;top:50%;transform:translateY(-50%)}
 @media (max-width:560px){#viewer .prev,#viewer .next{top:auto;bottom:56px;transform:none}#viewer .cap{bottom:16px;padding:0 16px}}
+
+/* realizacje paneli: zdjęcia pionowe */
+.rlista.fotki{grid-template-columns:repeat(4,1fr);gap:24px}
+.wiz.fotka{aspect-ratio:3/4}
+@media (max-width:960px){.rlista.fotki{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.rlista.fotki{grid-template-columns:repeat(2,1fr);gap:16px}.rlista.fotki .real p{display:none}.rlista.fotki .real h3{font-size:17px}}
