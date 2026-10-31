@@ -132,7 +132,7 @@ section.blok.beton{background:var(--beton)}
 .usluga a{color:var(--mosiadz-jasny)}
 
 /* realizacje */
-.rlista{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.rlista{display:grid;grid-template-columns:repeat(2,1fr);gap:32px 24px}
 .real{min-width:0}
 .wiz{aspect-ratio:16/10;position:relative;background:var(--grafit-2);border:1px solid var(--linia);overflow:hidden}
 .wiz svg{position:absolute;inset:0;width:100%;height:100%}
