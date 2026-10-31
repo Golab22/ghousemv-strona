@@ -85,6 +85,34 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
   }
 
+
+  /* ---------- przeglądarka wizualizacji na pełny ekran ---------- */
+  var fotos = [].slice.call(document.querySelectorAll('.wiz.foto'));
+  if (fotos.length) {
+    var items = [];
+    fotos.forEach(function (w) {
+      var title = (w.closest('.real') && w.closest('.real').querySelector('h3')) ? w.closest('.real').querySelector('h3').textContent : '';
+      var start = items.length;
+      w.querySelectorAll('img').forEach(function (im) { items.push({ src: im.currentSrc || im.src, alt: im.alt, title: title }); });
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'powieksz'; b.textContent = 'POWIĘKSZ ⤢'; b.setAttribute('aria-label', 'Powiększ wizualizację: ' + title); w.appendChild(b);
+      w.addEventListener('click', function () { openV(start); });
+    });
+    var v = document.createElement('div'); v.id = 'viewer'; v.setAttribute('role', 'dialog'); v.setAttribute('aria-modal', 'true'); v.setAttribute('aria-label', 'Wizualizacja');
+    v.innerHTML = '<img alt=""><div class="cap"></div><button class="prev" type="button" aria-label="Poprzednie">‹</button><button class="next" type="button" aria-label="Następne">›</button><button class="x" type="button" aria-label="Zamknij">×</button>';
+    document.body.appendChild(v);
+    var cur = 0, vi = v.querySelector('img'), cap = v.querySelector('.cap');
+    function show(i) { cur = (i + items.length) % items.length; var it = items[cur]; vi.src = it.src; vi.alt = it.alt; cap.innerHTML = '<b>' + (cur + 1) + ' / ' + items.length + '</b>' + it.alt; }
+    function openV(i) { show(i); v.classList.add('open'); document.documentElement.style.overflow = 'hidden'; v.querySelector('.x').focus(); }
+    function closeV() { v.classList.remove('open'); document.documentElement.style.overflow = ''; }
+    v.querySelector('.prev').addEventListener('click', function (e) { e.stopPropagation(); show(cur - 1); });
+    v.querySelector('.next').addEventListener('click', function (e) { e.stopPropagation(); show(cur + 1); });
+    v.querySelector('.x').addEventListener('click', closeV);
+    v.addEventListener('click', function (e) { if (e.target === v) closeV(); });
+    document.addEventListener('keydown', function (e) { if (!v.classList.contains('open')) return; if (e.key === 'Escape') closeV(); if (e.key === 'ArrowRight') show(cur + 1); if (e.key === 'ArrowLeft') show(cur - 1); });
+    var tx = null; v.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+    v.addEventListener('touchend', function (e) { if (tx === null) return; var dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1)); tx = null; });
+  }
+
   /* ---------- intro: logo rysowane jak w CAD (tylko strona główna, raz na sesję) ---------- */
   if (!document.body.hasAttribute('data-intro')) return;
   var seen = false;
