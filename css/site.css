@@ -136,6 +136,11 @@ section.blok.beton{background:var(--beton)}
 .real{min-width:0}
 .wiz{aspect-ratio:16/10;position:relative;background:var(--grafit-2);border:1px solid var(--linia);overflow:hidden}
 .wiz svg{position:absolute;inset:0;width:100%;height:100%}
+.wiz.foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s cubic-bezier(.2,.7,.2,1)}
+.wiz.foto img.alt{opacity:0}
+.real:hover .wiz.foto img.alt,.real:focus-within .wiz.foto img.alt{opacity:1}
+.real:hover .wiz.foto img{transform:scale(1.03)}
+.wiz.foto .brak{z-index:2;background:rgba(20,22,24,.55);color:#eceae5}
 .wiz .brak{position:absolute;right:10px;top:10px;font-family:var(--f-mono);font-size:10px;letter-spacing:.1em;color:var(--na-grafit-2);border:1px solid rgba(236,234,229,.25);padding:2px 6px}
 .real h3{font-stretch:85%;font-size:22px;margin:14px 0 6px}
 .real p{font-size:15px;color:var(--tekst-2);margin-bottom:8px}
