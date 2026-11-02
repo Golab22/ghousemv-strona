@@ -95,8 +95,8 @@
       stages.push({ g: g, ps: ps });
     }
   }
-  var CMD = ['_PLINE  granica działki', '_RECTANG  bryły budynku', '_ELEV  elewacja płd.', '_RENDER  wizualizacja'];
-  var TB = [['ANALIZA DZIAŁKI', '1:500'], ['KONCEPCJA BRYŁY', '1:500'], ['ELEWACJA PŁD.', '1:100'], ['WIZUALIZACJA', '—']];
+  var CMD = ['_PLINE  granica działki', '_PLINE  budynek i hala', '_ELEV  elewacja wsch.', '_RENDER  wizualizacja'];
+  var TB = [['ANALIZA DZIAŁKI', '1:1000'], ['KONCEPCJA', '1:1000'], ['ELEWACJA WSCH.', '1:250'], ['WIZUALIZACJA', '—']];
   var planG = proc ? proc.querySelector('.plan') : null, tb2 = proc ? proc.querySelector('.tb2') : null, tb3 = proc ? proc.querySelector('.tb3') : null;
   function ease(q) { return q < .5 ? 2 * q * q : 1 - Math.pow(-2 * q + 2, 2) / 2; }
   function proces() {
@@ -109,21 +109,21 @@
       s.ps.forEach(function (path, j) {
         var tj = clamp(t * 1.6 - (j / Math.max(1, n)) * 0.6, 0, 1);
         if (path.classList.contains('przer')) path.style.opacity = (tj * 0.8).toFixed(3);
-        else path.style.strokeDashoffset = (1 - tj).toFixed(4);
+        else { path.style.strokeDasharray = tj >= 1 ? 'none' : '1'; path.style.strokeDashoffset = (1 - tj).toFixed(4); }
       });
       s.g.classList.toggle('widac', t > 0.9);
     });
     var out2 = clamp((p - 0.5) / 0.08, 0, 1), out3 = clamp((p - 0.75) / 0.14, 0, 1);
     stages[0].g.style.opacity = stages[1].g.style.opacity = (1 - out2).toFixed(3);
     stages[2].g.style.opacity = (clamp((p - 0.47) / 0.04, 0, 1) * (1 - out3)).toFixed(3);
-    var q = ease(clamp((p - 0.25) / 0.16, 0, 1)), hx = 279, hy = 189;
+    var q = ease(clamp((p - 0.25) / 0.16, 0, 1)), hx = 269, hy = 189;
     if (planG) planG.setAttribute('transform', 'translate(' + (hx + (320 - hx) * q).toFixed(2) + ' ' + (hy + (205 - hy) * q).toFixed(2) + ') scale(' + (1 + 0.3 * q).toFixed(4) + ') translate(' + (-hx) + ' ' + (-hy) + ')');
     var t4 = clamp((p - 0.75) / 0.2, 0, 1);
     if (odkr) { odkr.setAttribute('width', (t4 * 640).toFixed(1)); skan.setAttribute('x1', t4 * 640); skan.setAttribute('x2', t4 * 640); skan.style.opacity = t4 > 0 && t4 < 1 ? 1 : 0; }
     lis.forEach(function (li, i) { li.classList.toggle('on', i === si); });
     if (cmdEl) cmdEl.textContent = 'Polecenie: ' + CMD[si];
     if (pctEl) pctEl.textContent = Math.round(p * 100) + '%';
-    if (tb2 && tb2.textContent !== TB[si][0]) { tb2.textContent = TB[si][0]; tb3.textContent = TB[si][1]; }
+    if (tb2 && (tb2.textContent !== TB[si][0] || tb3.textContent !== TB[si][1])) { tb2.textContent = TB[si][0]; tb3.textContent = TB[si][1]; }
   }
 
   /* ---------- linia wymiarowa przewijania ---------- */
