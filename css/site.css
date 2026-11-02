@@ -327,3 +327,9 @@ html.gh-lock{overflow:hidden}
 .wiz.fotka{aspect-ratio:3/4}
 @media (max-width:960px){.rlista.fotki{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.rlista.fotki{grid-template-columns:repeat(2,1fr);gap:16px}.rlista.fotki .real p{display:none}.rlista.fotki .real h3{font-size:17px}}
+
+.usluga.szeroka{grid-column:1/-1}
+.usluga .lista{margin:12px 0 0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:6px 24px;color:var(--na-grafit-2)}
+.usluga .lista li{padding-left:18px;position:relative}
+.usluga .lista li::before{content:"";position:absolute;left:0;top:.7em;width:8px;height:2px;background:var(--mosiadz)}
+@media (max-width:560px){.usluga .lista{grid-template-columns:1fr}}
