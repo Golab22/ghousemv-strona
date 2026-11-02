@@ -124,15 +124,15 @@
   intro.id = 'gh-intro';
   intro.setAttribute('aria-hidden', 'true');
   intro.innerHTML =
-    '<div class="gh-grid"></div><div class="gh-stage">' +
+    '<div class="gh-bg"></div><div class="gh-grid"></div><div class="gh-scan"></div><div class="gh-stage">' +
     '<svg class="gh-logo" viewBox="118 64 318 318"><defs>' +
-    '<linearGradient id="gh-mos" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e6cf9c"/><stop offset=".5" stop-color="#c2a066"/><stop offset="1" stop-color="#94743f"/></linearGradient>' +
-    '<linearGradient id="gh-gra" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5d6268"/><stop offset="1" stop-color="#2e3135"/></linearGradient>' +
-    '<pattern id="gh-hatch-m" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#e6cf9c" stroke-width=".8"/></pattern>' +
+    '<linearGradient id="gh-mos" gradientUnits="userSpaceOnUse" x1="150" y1="360" x2="410" y2="86"><stop offset="0" stop-color="#6f5431"/><stop offset=".18" stop-color="#a88655"/><stop offset=".38" stop-color="#ecdcb6"/><stop offset=".47" stop-color="#c9a970"/><stop offset=".66" stop-color="#9b7b4a"/><stop offset=".82" stop-color="#d7bf8f"/><stop offset="1" stop-color="#7a5e36"/></linearGradient>' +
+    '<linearGradient id="gh-gra" gradientUnits="userSpaceOnUse" x1="140" y1="360" x2="370" y2="180"><stop offset="0" stop-color="#2a2d31"/><stop offset=".45" stop-color="#5b6167"/><stop offset=".6" stop-color="#7a8086"/><stop offset="1" stop-color="#33373b"/></linearGradient>' +
+    '<pattern id="gh-hatch-m" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#dcc79c" stroke-width=".8"/></pattern>' +
     '<pattern id="gh-hatch-g" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#aeb4ba" stroke-width=".8"/></pattern>' +
     '<linearGradient id="gh-glint-g" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
     '<clipPath id="gh-clip"><polygon points="145,272 162,272 353,88 336,88"/><polygon points="222,354 239,354 412,182 395,182"/></clipPath></defs>' +
-    '<g class="gh-cons"></g><g class="gh-hatch"></g><g class="gh-fills"></g>' +
+    '<g class="gh-cons"></g><g class="gh-depth"></g><g class="gh-hatch"></g><g class="gh-fills"></g>' +
     '<g clip-path="url(#gh-clip)"><rect class="gh-glint" x="40" y="64" width="70" height="318" fill="url(#gh-glint-g)"/></g>' +
     '<g class="gh-edges"></g><g class="gh-snaps"></g></svg>' +
     '<div class="gh-name"><div class="gh-n1">GHOUSE</div><div class="gh-n2">MODERN VISION</div></div></div>' +
@@ -144,7 +144,7 @@
   intro.querySelector('.gh-skip').removeAttribute('aria-hidden');
 
   var svg = intro.querySelector('.gh-logo');
-  var G = { cons: svg.querySelector('.gh-cons'), hatch: svg.querySelector('.gh-hatch'), fills: svg.querySelector('.gh-fills'), edges: svg.querySelector('.gh-edges'), snaps: svg.querySelector('.gh-snaps') };
+  var G = { depth: svg.querySelector('.gh-depth'), cons: svg.querySelector('.gh-cons'), hatch: svg.querySelector('.gh-hatch'), fills: svg.querySelector('.gh-fills'), edges: svg.querySelector('.gh-edges'), snaps: svg.querySelector('.gh-snaps') };
   var glint = svg.querySelector('.gh-glint'), grid = intro.querySelector('.gh-grid');
   var n1 = intro.querySelector('.gh-n1'), n2 = intro.querySelector('.gh-n2');
   var cross = intro.querySelector('.gh-cross'), cmd = intro.querySelector('.gh-cmdtxt'), xy = intro.querySelector('.gh-xy');
@@ -196,6 +196,17 @@
       A(r, [{ opacity: 0, transform: 'scale(2.2)' }, { opacity: 1, transform: 'scale(1)', offset: 0.35 }, { opacity: 1, transform: 'scale(1)', offset: 0.7 }, { opacity: 0, transform: 'scale(1)' }], { delay: rnd(1250, 1750), duration: 700, easing: 'ease-out' });
     });
   });
+  var DEP = 9, depthEls = [];
+  for (var k = DEP; k >= 1; k--) {
+    SHAPES.forEach(function (s) {
+      var off = k * 0.8, sh = k / DEP;
+      var pts = s.p.map(function (q) { return (q[0] + off) + ',' + (q[1] + off); }).join(' ');
+      var c = s.c === 'm' ? 'rgb(' + Math.round(122 - 76 * sh) + ',' + Math.round(94 - 59 * sh) + ',' + Math.round(52 - 33 * sh) + ')' : 'rgb(' + Math.round(34 - 20 * sh) + ',' + Math.round(37 - 22 * sh) + ',' + Math.round(40 - 23 * sh) + ')';
+      var d = el('polygon', { points: pts, fill: c, opacity: 0 }, G.depth);
+      d.style.transform = 'translate(' + (-off) + 'px,' + (-off) + 'px)';
+      depthEls.push([d, off, k]);
+    });
+  }
   A(grid, [{ opacity: 0 }, { opacity: 1 }], { duration: 600, easing: 'ease-out' });
   A(glint, [{ transform: 'translateX(0px)' }, { transform: 'translateX(420px)' }], { delay: 2500, duration: 800, easing: 'ease-in-out' });
   A(n1, [{ opacity: 0, letterSpacing: '.7em', filter: 'blur(6px)' }, { opacity: 1, letterSpacing: '.22em', filter: 'blur(0px)' }], { delay: 2400, duration: 900, easing: 'cubic-bezier(.2,.7,.2,1)' });
@@ -217,7 +228,7 @@
     setTimeout(function () { intro.remove(); }, 800);
     try { sessionStorage.setItem('ghIntro', '1'); } catch (e) {}
   }
-  function skip() { anims.forEach(function (a) { try { a.finish(); } catch (e) {} }); finish(); }
+  function skip() { anims.forEach(function (a) { try { a.finish(); } catch (e) {} }); finish(); document.documentElement.classList.remove('gh-flying'); document.dispatchEvent(new Event('gh-intro-koniec')); }
 
   later(function () { cmd.textContent = '_XLINE'; }, 100);
   later(function () { cmd.textContent = '_LINE'; }, 500);
@@ -226,7 +237,47 @@
   later(function () { cmd.textContent = 'Model gotowy'; }, 2450);
   later(function () { moveCursor(); cursorTimer = setInterval(moveCursor, 150); }, 250);
   later(function () { clearInterval(cursorTimer); }, 2100);
-  later(finish, 4000);
+  var stage = intro.querySelector('.gh-stage');
+  later(function () {
+    cmd.textContent = '_EXTRUDE';
+    stage.classList.add('gh-3d');
+    depthEls.forEach(function (o) {
+      o[0].animate([{ opacity: 0, transform: 'translate(' + (-o[1]) + 'px,' + (-o[1]) + 'px)' }, { opacity: 1, transform: 'translate(0px,0px)' }],
+        { delay: o[2] * 22, duration: 700, fill: 'both', easing: 'cubic-bezier(.2,.7,.2,1)' });
+    });
+    glint.animate([{ transform: 'translateX(0px)' }, { transform: 'translateX(420px)' }], { delay: 650, duration: 900, fill: 'both', easing: 'ease-in-out' });
+  }, 2750);
+  later(function () { cmd.textContent = 'Model 3D gotowy'; }, 3300);
+  later(function () {
+    stage.classList.remove('gh-3d');
+    depthEls.forEach(function (o) { o[0].animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, fill: 'both' }); });
+  }, 4050);
+  later(fly, 4600);
+  function fly() {
+    if (done) return;
+    var target = document.querySelector('.marka img');
+    var r1 = svg.getBoundingClientRect(), r2 = target ? target.getBoundingClientRect() : null;
+    document.documentElement.classList.add('gh-flying');
+    [n1, n2, intro.querySelector('.gh-cmd'), intro.querySelector('.gh-ucs'), intro.querySelector('.gh-skip')].forEach(function (e) {
+      if (e) e.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, fill: 'forwards' });
+    });
+    if (r2 && r2.width) {
+      var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2), dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2), sc = r2.width / r1.width;
+      svg.style.transformOrigin = '50% 50%';
+      svg.animate([{ transform: 'none' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sc + ')' }], { duration: 900, fill: 'forwards', easing: 'cubic-bezier(.7,0,.2,1)' });
+    }
+    var wipe = [{ clipPath: 'inset(0 0 0 0)' }, { clipPath: 'inset(100% 0 0 0)' }];
+    intro.querySelector('.gh-bg').animate(wipe, { delay: 250, duration: 900, fill: 'forwards', easing: 'cubic-bezier(.7,0,.25,1)' });
+    grid.animate(wipe, { delay: 250, duration: 900, fill: 'forwards', easing: 'cubic-bezier(.7,0,.25,1)' });
+    intro.querySelector('.gh-scan').animate([{ top: '0%', opacity: 1 }, { top: '100%', opacity: 1 }], { delay: 250, duration: 900, fill: 'forwards', easing: 'cubic-bezier(.7,0,.25,1)' });
+    later(function () { document.dispatchEvent(new Event('gh-intro-koniec')); }, 450);
+    later(function () {
+      done = true; timers.forEach(clearTimeout); clearInterval(cursorTimer);
+      document.documentElement.classList.remove('gh-lock', 'gh-flying');
+      intro.remove();
+      try { sessionStorage.setItem('ghIntro', '1'); } catch (e) {}
+    }, 1250);
+  }
   intro.querySelector('.gh-skip').addEventListener('click', skip);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !done) skip(); });
 })();
